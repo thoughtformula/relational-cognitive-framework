@@ -1,6 +1,15 @@
 # Relational Cognitive Framework (RCF)
 ## Formal Ontology and Computational Architecture
-**Version:** 0.1.0 — conceptual specification
+**Version:** 0.2.0 — formal vocabulary and domain contracts
+
+The four companion essays establish the conceptual foundation. Version 0.2.0 adds the language-independent [normative specification](specification/README.md), a [worked exchange example](examples/garden.json), and [conformance scenarios](examples/conformance.md). The normative specification takes precedence over illustrative prose and Python snippets when defining interoperable records.
+
+### Companion essays
+
+- [RCO — Ontology](docs/Relationship%20Cognitive%20Ontology%20%28RCO%29.md)
+- [RCE — Epistemology](docs/Relationship%20Cognitive%20Epistemology%20%28RCE%29.md)
+- [RCA — Axiology](docs/Relationship%20Cognitive%20Axiology%20%28RCA%29.md)
+- [RCP — Praxeology](docs/Relationship%20Cognitive%20Praxeology%20%28RCP%29.md)
 
 ## Abstract
 RCF integrates Relational Cognitive Ontology (RCO), Epistemology (RCE), Axiology (RCA), and Praxeology (RCP) into a recursive model of agents embedded in environments. Entities and relationships establish a world state; observations and inferences produce beliefs; values evaluate possible states; and actions transform states. The eight NTFS cognitive orientations are optional processing capabilities spanning these domains, not validated psychological modules or mandatory stages.
@@ -66,7 +75,9 @@ Let a world state be `W_t`, agent internal state `I_a,t`, observation function `
 
 These are interface-level equations, not assumptions that observations are perfect, actions deterministic, or values reducible to a number. Concurrent agents may act on stale or conflicting beliefs.
 
-## 6. Minimal typed data contracts (Python)
+## 6. Historical illustrative data contracts (Python, 0.1.0)
+
+These examples illustrate the original architecture, not the normative 0.2 exchange format. In particular, `Claim.status` in this historical sketch denotes acquisition method; 0.2 separates acquisition, assertion lifecycle, and agent-specific epistemic stance. See [terminology](specification/terminology.md) and [epistemology](specification/epistemology.md) for the current contracts.
 ```python
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -151,17 +162,19 @@ Each proposition needs an operational benchmark, baseline, and falsification cri
 7. What empirical evidence would justify retaining the NTFS labels rather than replacing them with domain-specific names?
 
 ## 11. Suggested development milestones
-**0.1 — Vocabulary:** schema and invariants for entities, relationships, events, claims, values, and actions.
+**0.1 — Conceptual framework:** four essays and NTFS-inspired processing model.
 
-**0.2 — Knowledge:** provenance, belief revision, uncertainty, temporal state, and contradictions.
+**0.2 — Formal vocabulary and domain contracts:** identity, scoped relationships, propositions, evidence, values, actions, and cognitive operations; interoperable records and conformance scenarios.
 
-**0.3 — Valuation:** multiple criteria, stakeholder views, normative constraints, explicit conflict records.
+**0.3 — Dynamics:** transition, revision, deliberation, action lifecycle, feedback and concurrent operations.
 
-**0.4 — Agency:** permissions, capability registry, planning, action/outcome event log.
+**0.4 — Reference implementation:** executable conformance tests and a minimal implementation.
 
-**0.5 — Cognition:** interchangeable NTFS-inspired strategies and benchmarkable workflows.
+**0.5 — Multi-agent cognition:** communication, shared contexts, authority, negotiation and collective agency.
 
-**0.6 — Multi-agent environments:** negotiation, shared state, distributed causality, collective agency tests.
+**0.6 — Research:** experimental learning architectures, baselines, benchmarks and empirical evaluation.
+
+**1.0 — Stable specification:** independently implementable, versioned contracts and demonstrated interoperability.
 
 ## 12. Scope and limitations
 RCF is a proposed conceptual and engineering framework. It does not establish that reality is entirely relational, that Jungian functions are neurobiologically discrete, or that simulated valuations entail subjective experience. Its practical merit depends on explanatory precision, implementation simplicity, and measurable performance against alternatives.
