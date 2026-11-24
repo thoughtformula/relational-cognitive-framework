@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 — Formal dynamics and cognitive operations
+
+- Defines agent-specific decision contexts, strategy executions and explicit deliberation outcomes.
+- Specifies transition requests/receipts, lifecycle ordering, world-state freshness checks, and separation of applied execution from verified goal achievement.
+- Formalizes revision-policy obligations: conflicting evidence, provenance dependency, non-Bayesian uncertainty and preserved supersession history.
+- Adds feedback semantics, ordering edges and concurrent stale-request rejection/revalidation rules.
+- Introduces a 64-record self-contained dynamics example, behavioral conformance matrix and 17 focused regression tests.
+- Retains the 0.2 record contracts without retroactively relabeling historical bundles.
+
 ## 0.2.0 — Formal vocabulary and domain contracts
 
 - Introduces a normative, implementation-independent specification for ontology, epistemology, axiology, praxeology and NTFS cognitive operations.
