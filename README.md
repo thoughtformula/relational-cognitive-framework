@@ -1,8 +1,8 @@
 # Relational Cognitive Framework (RCF)
 ## Formal Ontology and Computational Architecture
-**Version:** 0.2.0 — formal vocabulary and domain contracts
+**Version:** 0.3.0 — formal dynamics and cognitive operations
 
-The four companion essays establish the conceptual foundation. Version 0.2.0 adds the language-independent [normative specification](specification/README.md), a [worked exchange example](examples/garden.json), and [conformance scenarios](examples/conformance.md). The normative specification takes precedence over illustrative prose and Python snippets when defining interoperable records.
+The four companion essays establish the conceptual foundation. Version 0.2.0 introduced language-independent domain records; **0.3.0** adds [formal dynamics](specification/dynamics.md), [cognitive strategies](specification/strategies.md), [deliberation](specification/deliberation.md), [concurrency](specification/concurrency.md), and [behavioral conformance](specification/conformance-0.3.md). The [0.2 exchange](examples/garden.json) remains valid, and the new [0.3 example](examples/dynamics.json) demonstrates belief revision, action receipts, and stale concurrent requests. The normative specification takes precedence over illustrative prose and historical Python snippets.
 
 ### Companion essays
 
@@ -166,7 +166,7 @@ Each proposition needs an operational benchmark, baseline, and falsification cri
 
 **0.2 — Formal vocabulary and domain contracts:** identity, scoped relationships, propositions, evidence, values, actions, and cognitive operations; interoperable records and conformance scenarios.
 
-**0.3 — Dynamics:** transition, revision, deliberation, action lifecycle, feedback and concurrent operations.
+**0.3 — Formal dynamics:** transition, revision, deliberation, authorization, feedback and concurrent operations; normative 0.3 specification established.
 
 **0.4 — Reference implementation:** executable conformance tests and a minimal implementation.
 

@@ -1,0 +1,796 @@
+{
+  "rcf_version": "0.3.0",
+  "namespace": "example.garden.dynamics",
+  "records": [
+    {
+      "id": "garden",
+      "type": "environment",
+      "kind": "shared_habitat",
+      "boundary": "one soil bed and shared water quota"
+    },
+    {
+      "id": "soil",
+      "type": "entity",
+      "kind": "soil"
+    },
+    {
+      "id": "alice",
+      "type": "entity",
+      "kind": "person"
+    },
+    {
+      "id": "bob",
+      "type": "entity",
+      "kind": "person"
+    },
+    {
+      "id": "steward",
+      "type": "entity",
+      "kind": "organization"
+    },
+    {
+      "id": "garden-controller",
+      "type": "entity",
+      "kind": "environment_service"
+    },
+    {
+      "id": "alice-agent",
+      "type": "agent",
+      "entity_id": "alice",
+      "agency_kind": "cognitive",
+      "regulation": "probe and authorized watering",
+      "capability_ids": [
+        "water-alice"
+      ]
+    },
+    {
+      "id": "bob-agent",
+      "type": "agent",
+      "entity_id": "bob",
+      "agency_kind": "cognitive",
+      "regulation": "resource conservation and authorized watering",
+      "capability_ids": [
+        "water-bob"
+      ]
+    },
+    {
+      "id": "soil-before",
+      "type": "state",
+      "subject_id": "soil",
+      "environment_id": "garden",
+      "properties": {
+        "moisture_percent": 12
+      },
+      "recorded_at": "2026-01-01T09:00:00Z",
+      "valid_during": {
+        "start": "2026-01-01T09:00:00Z",
+        "end": "2026-01-01T09:13:00Z"
+      }
+    },
+    {
+      "id": "p-dry",
+      "type": "proposition",
+      "predicate": "soil_dry",
+      "arguments": [
+        {
+          "kind": "ref",
+          "id": "soil"
+        }
+      ],
+      "polarity": "positive",
+      "environment_id": "garden",
+      "valid_during": {
+        "start": "2026-01-01T09:00:00Z",
+        "end": "2026-01-01T09:13:00Z"
+      }
+    },
+    {
+      "id": "p-healthy",
+      "type": "proposition",
+      "predicate": "soil_moisture_at_least_percent",
+      "arguments": [
+        {
+          "kind": "ref",
+          "id": "soil"
+        },
+        {
+          "kind": "literal",
+          "value": 20
+        }
+      ],
+      "polarity": "positive",
+      "environment_id": "garden",
+      "valid_during": {
+        "start": "2026-01-01T09:13:00Z",
+        "end": "2026-01-01T10:00:00Z"
+      }
+    },
+    {
+      "id": "obs-dry",
+      "type": "observation",
+      "observer_id": "alice-agent",
+      "environment_id": "garden",
+      "method": "probe",
+      "data": {
+        "moisture_percent": 12
+      },
+      "observed_at": "2026-01-01T09:01:00Z",
+      "recorded_at": "2026-01-01T09:01:00Z"
+    },
+    {
+      "id": "ev-dry",
+      "type": "evidence",
+      "proposition_id": "p-dry",
+      "basis_ids": [
+        "obs-dry"
+      ],
+      "relation": "supports",
+      "source_id": "alice-agent",
+      "recorded_at": "2026-01-01T09:02:00Z"
+    },
+    {
+      "id": "b-accept",
+      "type": "belief",
+      "agent_id": "alice-agent",
+      "proposition_id": "p-dry",
+      "stance": "accepts",
+      "confidence": {
+        "kind": "ordinal",
+        "value": "medium"
+      },
+      "evidence_ids": [
+        "ev-dry"
+      ],
+      "recorded_at": "2026-01-01T09:02:00Z"
+    },
+    {
+      "id": "obs-wet",
+      "type": "observation",
+      "observer_id": "bob-agent",
+      "environment_id": "garden",
+      "method": "visual",
+      "data": {
+        "appearance": "wet"
+      },
+      "observed_at": "2026-01-01T09:03:00Z",
+      "recorded_at": "2026-01-01T09:03:00Z"
+    },
+    {
+      "id": "ev-wet",
+      "type": "evidence",
+      "proposition_id": "p-dry",
+      "basis_ids": [
+        "obs-wet"
+      ],
+      "relation": "contradicts",
+      "source_id": "bob-agent",
+      "recorded_at": "2026-01-01T09:04:00Z"
+    },
+    {
+      "id": "bob-belief",
+      "type": "belief",
+      "agent_id": "bob-agent",
+      "proposition_id": "p-dry",
+      "stance": "rejects",
+      "confidence": {
+        "kind": "ordinal",
+        "value": "low"
+      },
+      "evidence_ids": [
+        "ev-wet"
+      ],
+      "recorded_at": "2026-01-01T09:04:00Z"
+    },
+    {
+      "id": "b-suspend",
+      "type": "belief",
+      "agent_id": "alice-agent",
+      "proposition_id": "p-dry",
+      "stance": "suspends",
+      "confidence": {
+        "kind": "unknown"
+      },
+      "evidence_ids": [
+        "ev-dry",
+        "ev-wet"
+      ],
+      "supersedes": "b-accept",
+      "recorded_at": "2026-01-01T09:05:00Z"
+    },
+    {
+      "id": "revision-suspend",
+      "type": "belief_revision",
+      "agent_id": "alice-agent",
+      "prior_belief_id": "b-accept",
+      "result_belief_id": "b-suspend",
+      "trigger_ids": [
+        "ev-wet"
+      ],
+      "method": "conservative-conflict-v1",
+      "recorded_at": "2026-01-01T09:05:00Z"
+    },
+    {
+      "id": "context-probe",
+      "type": "decision_context",
+      "agent_id": "alice-agent",
+      "environment_id": "garden",
+      "state_ids": [
+        "soil-before"
+      ],
+      "belief_ids": [
+        "b-suspend"
+      ],
+      "valuation_ids": [],
+      "constraint_ids": [],
+      "permission_ids": [],
+      "world_revision": "r0",
+      "recorded_at": "2026-01-01T09:05:30Z"
+    },
+    {
+      "id": "obs-retest",
+      "type": "observation",
+      "observer_id": "alice-agent",
+      "environment_id": "garden",
+      "method": "independent calibrated probe",
+      "data": {
+        "moisture_percent": 11
+      },
+      "observed_at": "2026-01-01T09:06:00Z",
+      "recorded_at": "2026-01-01T09:06:00Z"
+    },
+    {
+      "id": "ev-retest",
+      "type": "evidence",
+      "proposition_id": "p-dry",
+      "basis_ids": [
+        "obs-retest"
+      ],
+      "relation": "supports",
+      "source_id": "alice-agent",
+      "recorded_at": "2026-01-01T09:07:00Z"
+    },
+    {
+      "id": "op-retest",
+      "type": "cognitive_operation",
+      "agent_id": "alice-agent",
+      "orientations": [
+        "Se",
+        "Te"
+      ],
+      "strategy": "probe-v1",
+      "input_ids": [
+        "soil",
+        "p-dry",
+        "b-suspend"
+      ],
+      "output_ids": [
+        "obs-retest",
+        "ev-retest"
+      ],
+      "evidence_ids": [
+        "ev-retest"
+      ],
+      "recorded_at": "2026-01-01T09:07:00Z"
+    },
+    {
+      "id": "run-retest",
+      "type": "strategy_run",
+      "operation_id": "op-retest",
+      "context_id": "context-probe",
+      "status": "completed",
+      "started_at": "2026-01-01T09:05:45Z",
+      "recorded_at": "2026-01-01T09:07:00Z"
+    },
+    {
+      "id": "b-reaccept",
+      "type": "belief",
+      "agent_id": "alice-agent",
+      "proposition_id": "p-dry",
+      "stance": "accepts",
+      "confidence": {
+        "kind": "ordinal",
+        "value": "high"
+      },
+      "evidence_ids": [
+        "ev-dry",
+        "ev-wet",
+        "ev-retest"
+      ],
+      "supersedes": "b-suspend",
+      "recorded_at": "2026-01-01T09:08:00Z"
+    },
+    {
+      "id": "revision-reaccept",
+      "type": "belief_revision",
+      "agent_id": "alice-agent",
+      "prior_belief_id": "b-suspend",
+      "result_belief_id": "b-reaccept",
+      "trigger_ids": [
+        "ev-retest"
+      ],
+      "method": "conservative-conflict-v1",
+      "recorded_at": "2026-01-01T09:08:00Z"
+    },
+    {
+      "id": "health",
+      "type": "value",
+      "holder_id": "alice-agent",
+      "kind": "ecological",
+      "description": "Maintain viable soil",
+      "scope": "garden",
+      "mode": "normative",
+      "recorded_at": "2026-01-01T09:00:00Z"
+    },
+    {
+      "id": "conservation",
+      "type": "value",
+      "holder_id": "bob-agent",
+      "kind": "ecological",
+      "description": "Conserve shared supply",
+      "scope": "garden",
+      "mode": "normative",
+      "recorded_at": "2026-01-01T09:00:00Z"
+    },
+    {
+      "id": "goal-alice",
+      "type": "goal",
+      "agent_id": "alice-agent",
+      "condition_id": "p-healthy",
+      "value_ids": [
+        "health"
+      ],
+      "recorded_at": "2026-01-01T09:09:00Z"
+    },
+    {
+      "id": "goal-bob",
+      "type": "goal",
+      "agent_id": "bob-agent",
+      "condition_id": "p-healthy",
+      "value_ids": [
+        "conservation"
+      ],
+      "recorded_at": "2026-01-01T09:09:00Z"
+    },
+    {
+      "id": "water-alice",
+      "type": "capability",
+      "agent_id": "alice-agent",
+      "kind": "water",
+      "description": "Apply measured water"
+    },
+    {
+      "id": "water-bob",
+      "type": "capability",
+      "agent_id": "bob-agent",
+      "kind": "water",
+      "description": "Apply measured water"
+    },
+    {
+      "id": "grant-alice",
+      "type": "permission",
+      "grantor_id": "steward",
+      "grantee_id": "alice-agent",
+      "capability_id": "water-alice",
+      "environment_id": "garden",
+      "target_ids": [
+        "soil"
+      ],
+      "effect": "allow",
+      "valid_during": {
+        "start": "2026-01-01T09:00:00Z",
+        "end": "2026-01-01T10:00:00Z"
+      },
+      "recorded_at": "2026-01-01T09:00:00Z"
+    },
+    {
+      "id": "grant-bob",
+      "type": "permission",
+      "grantor_id": "steward",
+      "grantee_id": "bob-agent",
+      "capability_id": "water-bob",
+      "environment_id": "garden",
+      "target_ids": [
+        "soil"
+      ],
+      "effect": "allow",
+      "valid_during": {
+        "start": "2026-01-01T09:00:00Z",
+        "end": "2026-01-01T10:00:00Z"
+      },
+      "recorded_at": "2026-01-01T09:00:00Z"
+    },
+    {
+      "id": "action-alice",
+      "type": "action",
+      "actor_id": "alice-agent",
+      "capability_id": "water-alice",
+      "environment_id": "garden",
+      "target_ids": [
+        "soil"
+      ],
+      "parameters": {
+        "litres": 2
+      },
+      "goal_ids": [
+        "goal-alice"
+      ],
+      "precondition_ids": [
+        "p-dry"
+      ],
+      "expected_effect_ids": [
+        "p-healthy"
+      ],
+      "permission_ids": [
+        "grant-alice"
+      ],
+      "reversibility": "irreversible",
+      "recorded_at": "2026-01-01T09:10:00Z"
+    },
+    {
+      "id": "action-bob",
+      "type": "action",
+      "actor_id": "bob-agent",
+      "capability_id": "water-bob",
+      "environment_id": "garden",
+      "target_ids": [
+        "soil"
+      ],
+      "parameters": {
+        "litres": 2
+      },
+      "goal_ids": [
+        "goal-bob"
+      ],
+      "precondition_ids": [
+        "p-dry"
+      ],
+      "expected_effect_ids": [
+        "p-healthy"
+      ],
+      "permission_ids": [
+        "grant-bob"
+      ],
+      "reversibility": "irreversible",
+      "recorded_at": "2026-01-01T09:10:00Z"
+    },
+    {
+      "id": "valuation-alice",
+      "type": "valuation",
+      "evaluator_id": "alice-agent",
+      "subject_id": "action-alice",
+      "value_id": "health",
+      "judgment": "favorable",
+      "belief_ids": [
+        "b-reaccept"
+      ],
+      "recorded_at": "2026-01-01T09:10:00Z"
+    },
+    {
+      "id": "context-alice",
+      "type": "decision_context",
+      "agent_id": "alice-agent",
+      "environment_id": "garden",
+      "state_ids": [
+        "soil-before"
+      ],
+      "belief_ids": [
+        "b-reaccept"
+      ],
+      "valuation_ids": [
+        "valuation-alice"
+      ],
+      "constraint_ids": [],
+      "permission_ids": [
+        "grant-alice"
+      ],
+      "world_revision": "r0",
+      "recorded_at": "2026-01-01T09:10:00Z"
+    },
+    {
+      "id": "context-bob",
+      "type": "decision_context",
+      "agent_id": "bob-agent",
+      "environment_id": "garden",
+      "state_ids": [
+        "soil-before"
+      ],
+      "belief_ids": [
+        "bob-belief"
+      ],
+      "valuation_ids": [],
+      "constraint_ids": [],
+      "permission_ids": [
+        "grant-bob"
+      ],
+      "world_revision": "r0",
+      "recorded_at": "2026-01-01T09:10:00Z"
+    },
+    {
+      "id": "decision-alice",
+      "type": "deliberation",
+      "agent_id": "alice-agent",
+      "context_id": "context-alice",
+      "goal_ids": [
+        "goal-alice"
+      ],
+      "candidate_action_ids": [
+        "action-alice"
+      ],
+      "valuation_ids": [
+        "valuation-alice"
+      ],
+      "constraint_ids": [],
+      "decision": "selected",
+      "selected_action_id": "action-alice",
+      "rationale": "Water under steward authorization subject to current world check",
+      "recorded_at": "2026-01-01T09:11:00Z"
+    },
+    {
+      "id": "decision-bob",
+      "type": "deliberation",
+      "agent_id": "bob-agent",
+      "context_id": "context-bob",
+      "goal_ids": [
+        "goal-bob"
+      ],
+      "candidate_action_ids": [
+        "action-bob"
+      ],
+      "valuation_ids": [],
+      "constraint_ids": [],
+      "decision": "selected",
+      "selected_action_id": "action-bob",
+      "rationale": "Independent proposal using the same observed revision r0",
+      "recorded_at": "2026-01-01T09:11:00Z"
+    },
+    {
+      "id": "alice-proposed",
+      "type": "action_event",
+      "action_id": "action-alice",
+      "status": "proposed",
+      "recorded_at": "2026-01-01T09:11:00Z"
+    },
+    {
+      "id": "alice-approved",
+      "type": "action_event",
+      "action_id": "action-alice",
+      "status": "approved",
+      "recorded_at": "2026-01-01T09:11:20Z"
+    },
+    {
+      "id": "alice-executing",
+      "type": "action_event",
+      "action_id": "action-alice",
+      "status": "executing",
+      "recorded_at": "2026-01-01T09:12:00Z"
+    },
+    {
+      "id": "bob-proposed",
+      "type": "action_event",
+      "action_id": "action-bob",
+      "status": "proposed",
+      "recorded_at": "2026-01-01T09:11:00Z"
+    },
+    {
+      "id": "bob-approved",
+      "type": "action_event",
+      "action_id": "action-bob",
+      "status": "approved",
+      "recorded_at": "2026-01-01T09:11:20Z"
+    },
+    {
+      "id": "bob-executing",
+      "type": "action_event",
+      "action_id": "action-bob",
+      "status": "executing",
+      "recorded_at": "2026-01-01T09:12:00Z"
+    },
+    {
+      "id": "request-alice",
+      "type": "transition_request",
+      "action_id": "action-alice",
+      "context_id": "context-alice",
+      "expected_state_ids": [
+        "soil-before"
+      ],
+      "permission_ids": [
+        "grant-alice"
+      ],
+      "idempotency_key": "water-alice-2026-01-01-1",
+      "recorded_at": "2026-01-01T09:12:15Z"
+    },
+    {
+      "id": "request-bob",
+      "type": "transition_request",
+      "action_id": "action-bob",
+      "context_id": "context-bob",
+      "expected_state_ids": [
+        "soil-before"
+      ],
+      "permission_ids": [
+        "grant-bob"
+      ],
+      "idempotency_key": "water-bob-2026-01-01-1",
+      "recorded_at": "2026-01-01T09:12:30Z"
+    },
+    {
+      "id": "soil-after",
+      "type": "state",
+      "subject_id": "soil",
+      "environment_id": "garden",
+      "properties": {
+        "moisture_percent": 24
+      },
+      "recorded_at": "2026-01-01T09:13:00Z",
+      "valid_during": {
+        "start": "2026-01-01T09:13:00Z",
+        "end": "2026-01-01T10:00:00Z"
+      },
+      "supersedes": "soil-before"
+    },
+    {
+      "id": "watering-event",
+      "type": "event",
+      "environment_id": "garden",
+      "kind": "watering",
+      "participant_ids": [
+        "alice",
+        "soil"
+      ],
+      "prior_state_ids": [
+        "soil-before"
+      ],
+      "result_state_ids": [
+        "soil-after"
+      ],
+      "occurred_at": "2026-01-01T09:13:00Z",
+      "recorded_at": "2026-01-01T09:13:00Z"
+    },
+    {
+      "id": "result-alice",
+      "type": "transition_result",
+      "request_id": "request-alice",
+      "status": "applied",
+      "prior_state_ids": [
+        "soil-before"
+      ],
+      "result_state_ids": [
+        "soil-after"
+      ],
+      "event_ids": [
+        "watering-event"
+      ],
+      "world_revision": "r1",
+      "recorded_at": "2026-01-01T09:13:00Z",
+      "issuer_id": "garden-controller"
+    },
+    {
+      "id": "alice-completed",
+      "type": "action_event",
+      "action_id": "action-alice",
+      "status": "completed",
+      "event_id": "watering-event",
+      "recorded_at": "2026-01-01T09:13:15Z"
+    },
+    {
+      "id": "result-bob",
+      "type": "transition_result",
+      "request_id": "request-bob",
+      "status": "rejected",
+      "prior_state_ids": [
+        "soil-after"
+      ],
+      "result_state_ids": [],
+      "event_ids": [],
+      "world_revision": "r1",
+      "reason": "material precondition stale: expected r0, current r1",
+      "recorded_at": "2026-01-01T09:13:45Z",
+      "issuer_id": "garden-controller"
+    },
+    {
+      "id": "bob-failed",
+      "type": "action_event",
+      "action_id": "action-bob",
+      "status": "failed",
+      "reason": "environment rejected stale transition",
+      "recorded_at": "2026-01-01T09:14:00Z"
+    },
+    {
+      "id": "obs-after",
+      "type": "observation",
+      "observer_id": "alice-agent",
+      "environment_id": "garden",
+      "method": "moisture probe",
+      "data": {
+        "moisture_percent": 24
+      },
+      "observed_at": "2026-01-01T09:14:00Z",
+      "recorded_at": "2026-01-01T09:14:00Z"
+    },
+    {
+      "id": "alice-verified",
+      "type": "action_event",
+      "action_id": "action-alice",
+      "status": "verified",
+      "recorded_at": "2026-01-01T09:14:30Z"
+    },
+    {
+      "id": "outcome-alice",
+      "type": "outcome",
+      "action_id": "action-alice",
+      "execution": "completed",
+      "goal_result": "achieved",
+      "observation_ids": [
+        "obs-after"
+      ],
+      "goal_ids": [
+        "goal-alice"
+      ],
+      "recorded_at": "2026-01-01T09:15:00Z"
+    },
+    {
+      "id": "outcome-bob",
+      "type": "outcome",
+      "action_id": "action-bob",
+      "execution": "failed",
+      "goal_result": "unknown",
+      "observation_ids": [],
+      "goal_ids": [
+        "goal-bob"
+      ],
+      "recorded_at": "2026-01-01T09:15:00Z"
+    },
+    {
+      "id": "feedback-alice",
+      "type": "feedback",
+      "action_id": "action-alice",
+      "result_id": "result-alice",
+      "predicted_effect_ids": [
+        "p-healthy"
+      ],
+      "observation_ids": [
+        "obs-after"
+      ],
+      "assessment": "matches",
+      "notes": "Matches moisture threshold but is not itself proof of unique causal attribution",
+      "recorded_at": "2026-01-01T09:16:00Z"
+    },
+    {
+      "id": "feedback-bob",
+      "type": "feedback",
+      "action_id": "action-bob",
+      "result_id": "result-bob",
+      "predicted_effect_ids": [
+        "p-healthy"
+      ],
+      "observation_ids": [],
+      "assessment": "undetermined",
+      "notes": "No action effect was applied",
+      "recorded_at": "2026-01-01T09:16:00Z"
+    },
+    {
+      "id": "serial-order",
+      "type": "ordering_edge",
+      "before_id": "result-alice",
+      "after_id": "result-bob",
+      "kind": "serialization",
+      "recorded_at": "2026-01-01T09:16:00Z"
+    },
+    {
+      "id": "alice-request-order",
+      "type": "ordering_edge",
+      "before_id": "request-alice",
+      "after_id": "result-alice",
+      "kind": "dependency",
+      "recorded_at": "2026-01-01T09:16:00Z"
+    },
+    {
+      "id": "bob-request-order",
+      "type": "ordering_edge",
+      "before_id": "request-bob",
+      "after_id": "result-bob",
+      "kind": "dependency",
+      "recorded_at": "2026-01-01T09:16:00Z"
+    }
+  ]
+}
